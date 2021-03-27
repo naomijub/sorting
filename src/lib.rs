@@ -44,6 +44,35 @@ impl<T: Ord + Clone> BTreeSort<T> for BTreeMap<T, usize> {
     }
 }
 
+impl<T: Ord + Clone> BTreeSort<T> for Vec<T> {
+    fn uniques(self) -> Vec<T> {
+        btree_sort(self).into_iter().map(|(k, _)| k).collect::<Vec<T>>()
+    }
+
+    fn reverse_uniques(self) -> Vec<T> {
+        let mut ord = btree_sort(self).into_iter().map(|(k, _)| k).collect::<Vec<T>>();
+        ord.reverse();
+        ord
+    }
+
+    fn sorted(self) -> Vec<T> {
+        btree_sort(self).into_iter()
+            .map(|(k, v)| vec![k; v])
+            .flatten()
+            .collect::<Vec<T>>()
+    }
+
+    fn reverse_sort(self) -> Vec<T> {
+        let mut ord = btree_sort(self)
+            .into_iter()
+            .map(|(k, v)| vec![k; v])
+            .flatten()
+            .collect::<Vec<T>>();
+        ord.reverse();
+        ord
+    }
+}
+
 #[cfg(test)]
 mod test {
     use super::*;
@@ -96,5 +125,17 @@ mod test {
             sort.sorted(),
             vec!["12", "543", "as", "cd", "ga", "ga", "ha", "he", "he", "pow"]
         );
+    }
+
+    #[test]
+    fn vec_usize() {
+        let vec: Vec<usize> = vec![7, 3, 4, 5, 6, 8, 3, 2, 5, 7, 8, 0, 9];
+
+        assert_eq!(vec.clone().uniques(), vec![0, 2, 3, 4, 5, 6, 7, 8, 9]);
+        assert_eq!(
+            vec.clone().sorted(),
+            vec![0, 2, 3, 3, 4, 5, 5, 6, 7, 7, 8, 8, 9]
+        );
+        assert_eq!(vec.reverse_uniques(), vec![9, 8, 7, 6, 5, 4, 3, 2, 0]);
     }
 }

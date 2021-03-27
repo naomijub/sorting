@@ -7,7 +7,9 @@ A simple crate to sort a vector using a BTreeMap. It makes easier to remove dupl
 * `reverse_uniques -> Vec<T>` - returns descending sorted unique values.
 * `reverse_sort -> Vec<T>` - returns descending sorted values.
 
-And the function `btree_sort` that provides the structure to support this sortings.
+And the function `btree_sort` that provides an intermediary structure to support this sortings.
+
+## Using function `btree_sort` and trait `BTreeSort`
 
 ```rust
 use sorting_vec::{btree_sort, BTreeSort};
@@ -48,5 +50,23 @@ fn string() {
 
     assert_eq!(sort.clone().uniques(), vec!["12", "543", "as", "cd", "ga", "ha", "he", "pow"]);
     assert_eq!(sort.sorted(), vec!["12", "543", "as", "cd", "ga", "ga", "ha", "he", "he", "pow"]);
+}
+```
+
+## Using trait `BTreeSort`
+
+```rust
+use sorting_vec::{BTreeSort};
+
+#[test]
+fn vec_usize() {
+    let vec: Vec<usize> = vec![7, 3, 4, 5, 6, 8, 3, 2, 5, 7, 8, 0, 9];
+
+    assert_eq!(vec.clone().uniques(), vec![0, 2, 3, 4, 5, 6, 7, 8, 9]);
+    assert_eq!(
+        vec.clone().sorted(),
+        vec![0, 2, 3, 3, 4, 5, 5, 6, 7, 7, 8, 8, 9]
+    );
+    assert_eq!(vec.reverse_uniques(), vec![9, 8, 7, 6, 5, 4, 3, 2, 0]);
 }
 ```
